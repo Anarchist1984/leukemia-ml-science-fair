@@ -30,7 +30,7 @@ def run():
     st.title("Leukemia Detection using Ensemble CNN")
     st.write("""
     This application uses an ensemble of Convolutional Neural Networks (CNNs) to detect leukemia from images of blood cell samples.
-    Upload an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells.
+    Choose an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells.
     """)
 
     # Load multiple models with different weights
