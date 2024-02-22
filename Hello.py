@@ -6,6 +6,7 @@ import keras
 import os
 from PIL import Image
 
+# Load model with weights
 def load_model_with_weights(weights_path):
     img_shape = (224, 224, 3)
     base_model = VGG16(weights='imagenet', input_shape=img_shape, include_top=False, pooling=None)
@@ -20,17 +21,17 @@ def load_model_with_weights(weights_path):
     model.compile(Adamax(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
+# Predictions using ensemble model
 def ensemble_predict(models, weights, image_array):
     predictions = [model.predict(image_array) * weight for model, weight in zip(models, weights)]
     return tf.reduce_sum(predictions, axis=0)
 
 def run():
-    st.set_page_config(
-        page_title="LeukemiaCNN",
-        page_icon="👋",
-    )
-
-    image_directory = 'StreamlitDirectory'
+    st.title("Leukemia Detection using Ensemble CNN")
+    st.write("""
+    This application uses an ensemble of Convolutional Neural Networks (CNNs) to detect leukemia from images of blood cell samples.
+    Upload an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells.
+    """)
 
     # Load multiple models with different weights
     models = []
@@ -48,11 +49,10 @@ def run():
         model = load_model_with_weights(weight_path)
         models.append(model)
         
-        # You can assign different weights to each model
-        # For simplicity, let's assume equal weights for now
+        # Equal weights for simplicity
         weights.append(1.0)
 
-    # Callback function to update the displayed content after image selection
+    # Callback function to update displayed content after image selection
     def selected_image_callback(selected_image_path):
         if selected_image_path:
             img = Image.open(selected_image_path)
@@ -60,9 +60,12 @@ def run():
             img_array = keras.preprocessing.image.img_to_array(img)
             img_array = tf.expand_dims(img_array, 0)  # Create a batch
 
+            # Extract image filename to check if it contains "Cancer"
+            image_filename = os.path.basename(selected_image_path)
+            is_cancer_image = "Cancer" in image_filename
+
             # Initialize lists to store predictions and interpretations for each model
             ensemble_predictions_list = []
-            single_model_predictions_list = []
             interpretation_list = []
 
             # Run predictions using ensemble model
@@ -72,31 +75,44 @@ def run():
                 
                 # Interpret predictions
                 is_cancerous = predictions[0][1] > 0.5
-                single_model_predictions_list.append(predictions)
-                if is_cancerous:
-                    interpretation_list.append("The model predicts that the image contains cancerous cells.")
-                else:
-                    interpretation_list.append("The model predicts that the image does not contain cancerous cells.")
+                confidence = predictions[0][1] if is_cancerous else predictions[0][0]
+                interpretation_list.append(f"The model predicts with a confidence of {confidence:.2f} that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells.")
+
+            # Congregate ensemble results
+            ensemble_results = ensemble_predict(models, weights, img_array)
+            is_cancerous_ensemble = ensemble_results[0][1] > 0.5
+            confidence_ensemble = ensemble_results[0][1] if is_cancerous_ensemble else ensemble_results[0][0]
+            interpretation_list.append(f"The ensemble model predicts with a confidence of {confidence_ensemble:.2f} that the image {'contains' if is_cancerous_ensemble else 'does not contain'} cancerous cells.")
+
+            # Display results
+            st.write("### Ensemble Model Predictions:")
+            for i, predictions in enumerate(ensemble_predictions_list):
+                st.write(f"Model {i+1} Predictions:", interpretation_list[i])
+
+            st.write("### Ensemble Model Congregated Results:")
+            st.write(f"Predictions:", interpretation_list[-1])
 
             # Run predictions using single base model
             single_model_predictions = single_base_model.predict(img_array)
-            single_model_predictions_list.append(single_model_predictions)
-
-            # Compare predictions
-            # Do whatever comparison you want here
-            # For simplicity, let's just print the predictions and interpretations for now
-            st.write("### Ensemble Model Predictions:")
-            for i, predictions in enumerate(ensemble_predictions_list):
-                st.write(f"Model {i+1} Predictions:", predictions)
-                st.write(f"Interpretation:", interpretation_list[i])
+            is_cancerous_single = single_model_predictions[0][1] > 0.5
+            confidence_single = single_model_predictions[0][1] if is_cancerous_single else single_model_predictions[0][0]
+            interpretation_single = f"The base model predicts that the image {'contains' if is_cancerous_single else 'does not contain'} cancerous cells."
 
             st.write("### Single Base Model Predictions:")
-            st.write(single_model_predictions_list)
+            st.write("Interpretation:", interpretation_single)
+
+            # Check if the image is labeled as "Cancer" in the filename
+            if is_cancer_image:
+                st.success("Image is labeled as 'Cancer'.")
+            else:
+                st.warning("Image is not labeled as 'Cancer'.")
 
         else:
             st.warning("No image selected.")
 
+
     # Display the image grid
+    image_directory = "StreamlitDirectory"
     display_image_grid(image_directory, selected_image_callback)
 
 def display_image_grid(image_dir, selected_image_callback):
