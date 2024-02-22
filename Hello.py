@@ -82,7 +82,7 @@ def run():
             ensemble_results = ensemble_predict(models, weights, img_array)
             is_cancerous_ensemble = ensemble_results[0][1] > 0.5
             confidence_ensemble = ensemble_results[0][1] if is_cancerous_ensemble else ensemble_results[0][0]
-            interpretation_list.append(f"The ensemble model predicts with a confidence of {confidence_ensemble:.2f} that the image {'contains' if is_cancerous_ensemble else 'does not contain'} cancerous cells.")
+            interpretation_list.append(f"The ensemble model predicts that the image {'contains' if is_cancerous_ensemble else 'does not contain'} cancerous cells.")
 
             # Display results
             st.write("### Ensemble Model Predictions:")
