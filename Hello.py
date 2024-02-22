@@ -109,6 +109,7 @@ def run():
 
         else:
             st.warning("No image selected.")
+    st.write("Visit our github page")
 
 
     # Display the image grid
