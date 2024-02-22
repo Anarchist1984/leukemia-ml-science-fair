@@ -104,12 +104,13 @@ def run():
             # Check if the image is labeled as "Cancer" in the filename
             if is_cancer_image:
                 st.success("Image is labeled as 'Cancer'.")
+                st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
             else:
                 st.warning("Image is not labeled as 'Cancer'.")
+                st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
 
         else:
             st.warning("No image selected.")
-    st.write("Visit our github page")
 
 
     # Display the image grid
