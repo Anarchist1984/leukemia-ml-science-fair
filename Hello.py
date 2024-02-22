@@ -136,7 +136,7 @@ def display_image_grid(image_dir, selected_image_callback):
         if j < num_images:
             with columns[j]:
                 img = Image.open(image_files[j])
-                st.image(img, caption=f"Image {j+1}", use_column_width=True)
+                st.image(img, use_column_width=True)  # Remove caption
                 
                 # Centered button
                 button_pressed = st.button(f"Select Image {j+1}", key=f"button_{j}")
