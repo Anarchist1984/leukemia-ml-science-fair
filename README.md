@@ -33,7 +33,7 @@ This is a Streamlit web application that uses an ensemble of Convolutional Neura
 
 ## File Structure
 
-- `app.py`: Main Streamlit application file.
+- `Hello.py`: Main Streamlit application file.
 - `requirements.txt`: File containing Python dependencies.
 - `EnsembleWeightsDirectory/`: Directory containing weights files for ensemble models.
 - `StreamlitDirectory/`: Directory containing image files for testing the application.
@@ -51,4 +51,4 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 
 ## License
 
-This project is not currently licensed, anyone feel free to use it.
+This project is licensed under the Apache license, but anyone feel free to use it.
