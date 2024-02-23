@@ -76,24 +76,24 @@ def run():
                 # Interpret predictions
                 is_cancerous = predictions[0][1] > 0.5
                 confidence = predictions[0][1] if is_cancerous else predictions[0][0]
-                interpretation_list.append(f"The model predicts that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells with a confidence of {confidence:.2f}.")
+                interpretation_list.append(f"The base model predicts that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells with a confidence of {confidence:.2f}.")
 
             # Display results for each model
             for i, interpretation in enumerate(interpretation_list):
-                st.write(f"### Model {i+1} Predictions:")
+                st.write(f"### Base model {i+1} Predictions:")
                 st.write(interpretation)
 
                 # Check if the image is labeled as "Cancer" in the filename and display success or warning message
                 if is_cancer_image:
                     if ensemble_predictions_list[i][0][1] > 0.5:
-                        st.success(f"Model {i+1} predicts accurately that the image contains cancer.")
+                        st.success(f"Base model {i+1} predicts accurately that the image contains cancer.")
                     else:
-                        st.warning(f"Model {i+1} predicts inaccurately that the image does not contain cancer.")
+                        st.warning(f"Base model {i+1} predicts inaccurately that the image does not contain cancer.")
                 else:
                     if ensemble_predictions_list[i][0][1] > 0.5:
-                        st.warning(f"Model {i+1} predicts inaccurately that the image contains cancer.")
+                        st.warning(f"Base model {i+1} predicts inaccurately that the image contains cancer.")
                     else:
-                        st.success(f"Model {i+1} predicts accurately that the image does not contain cancer.")
+                        st.success(f"Base model {i+1} predicts accurately that the image does not contain cancer.")
 
             # Congregate ensemble results
             ensemble_results = ensemble_predict(models, weights, img_array)
@@ -120,20 +120,20 @@ def run():
             single_model_predictions = single_base_model.predict(img_array)
             is_cancerous_single = single_model_predictions[0][1] > 0.5
             confidence_single = single_model_predictions[0][1] if is_cancerous_single else single_model_predictions[0][0]
-            interpretation_single = f"The base model predicts that the image {'contains' if is_cancerous_single else 'does not contain'} cancerous cells with a confidence of {confidence_single:.2f}."
-            st.write("### Single Base Model Predictions:")
+            interpretation_single = f"The CNN model predicts that the image {'contains' if is_cancerous_single else 'does not contain'} cancerous cells with a confidence of {confidence_single:.2f}."
+            st.write("### CNN Model Predictions:")
             st.write("Interpretation:", interpretation_single)
             # Display success or warning message for single base model
             if is_cancer_image:
                 if is_cancerous_single:
-                    st.success("Single base model predicts accurately that the image contains cancer.")
+                    st.success("CNN model predicts accurately that the image contains cancer.")
                 else:
-                    st.warning("Single base model predicts inaccurately that the image does not contain cancer.")
+                    st.warning("CNN model predicts inaccurately that the image does not contain cancer.")
             else:
                 if is_cancerous_single:
-                    st.warning("Single base model predicts inaccurately that the image contains cancer.")
+                    st.warning("CNN model predicts inaccurately that the image contains cancer.")
                 else:
-                    st.success("Single base model predicts accurately that the image does not contain cancer.")
+                    st.success("CNN model predicts accurately that the image does not contain cancer.")
 
             # Check if the image is labeled as "Cancer" in the filename
             warning = "The information provided here is for general educational purposes only and should not be construed as medical advice or substitute for professional medical expertise or treatment. Always seek the advice of your physician or other qualified healthcare provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read here."
