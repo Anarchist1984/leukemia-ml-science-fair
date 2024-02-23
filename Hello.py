@@ -97,6 +97,7 @@ def run():
             is_cancerous_single = single_model_predictions[0][1] > 0.5
             confidence_single = single_model_predictions[0][1] if is_cancerous_single else single_model_predictions[0][0]
             interpretation_single = f"The base model predicts that the image {'contains' if is_cancerous_single else 'does not contain'} cancerous cells."
+            warning = "The information provided on this website/application is for general informational purposes only and should not be considered as medical advice. All information, content, and material on this platform, including text, graphics, images, and any other material, are for informational purposes only and are not intended to serve as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this platform. Reliance on any information provided by this platform or its employees, agents, partners, or affiliates is solely at your own risk. We do not endorse or recommend any specific tests, physicians, products, procedures, opinions, or other information that may be mentioned on this platform. This platform is not responsible or liable for any advice, course of treatment, diagnosis, or any other information, services, or products that you obtain through this platform. Always consult with your physician or other qualified healthcare provider before starting any new treatment or discontinuing an existing treatment. If you think you may have a medical emergency, call your doctor or emergency services immediately. Never disregard professional medical advice or delay in seeking it because of something you have read on this website/application."
 
             st.write("### Single Base Model Predictions:")
             st.write("Interpretation:", interpretation_single)
@@ -105,9 +106,11 @@ def run():
             if is_cancer_image:
                 st.success("Image is labeled as 'Cancer'.")
                 st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
+                st.warning(warning)
             else:
                 st.warning("Image is not labeled as 'Cancer'.")
                 st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
+                st.warning(warning)
 
         else:
             st.warning("No image selected.")
