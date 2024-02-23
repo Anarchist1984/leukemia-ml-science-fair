@@ -59,15 +59,15 @@ def run():
             img = img.resize((224, 224))  # Resize image to match model input size
             img_array = keras.preprocessing.image.img_to_array(img)
             img_array = tf.expand_dims(img_array, 0)  # Create a batch
-
+    
             # Extract image filename to check if it contains "Cancer"
             image_filename = os.path.basename(selected_image_path)
             is_cancer_image = "Cancer" in image_filename
-
+    
             # Initialize lists to store predictions and interpretations for each model
             ensemble_predictions_list = []
             interpretation_list = []
-
+    
             # Run predictions using ensemble model
             for model, weight in zip(models, weights):
                 predictions = model.predict(img_array)
@@ -77,41 +77,46 @@ def run():
                 is_cancerous = predictions[0][1] > 0.5
                 confidence = predictions[0][1] if is_cancerous else predictions[0][0]
                 interpretation_list.append(f"The model predicts with a confidence of {confidence:.2f} that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells.")
-
+    
             # Congregate ensemble results
             ensemble_results = ensemble_predict(models, weights, img_array)
             is_cancerous_ensemble = ensemble_results[0][1] > 0.5
             confidence_ensemble = ensemble_results[0][1] if is_cancerous_ensemble else ensemble_results[0][0]
             interpretation_list.append(f"The ensemble model predicts that the image {'contains' if is_cancerous_ensemble else 'does not contain'} cancerous cells.")
-
+    
             # Display results
             st.write("### Ensemble Model Predictions:")
             for i, predictions in enumerate(ensemble_predictions_list):
                 st.write(f"Model {i+1} Predictions:", interpretation_list[i])
-
+    
             st.write("### Ensemble Model Congregated Results:")
             st.write(f"Predictions:", interpretation_list[-1])
-
+    
             # Run predictions using single base model
             single_model_predictions = single_base_model.predict(img_array)
             is_cancerous_single = single_model_predictions[0][1] > 0.5
             confidence_single = single_model_predictions[0][1] if is_cancerous_single else single_model_predictions[0][0]
             interpretation_single = f"The base model predicts that the image {'contains' if is_cancerous_single else 'does not contain'} cancerous cells."
-            warning = "The information provided on this website/application is for general informational purposes only and should not be considered as medical advice. All information, content, and material on this platform, including text, graphics, images, and any other material, are for informational purposes only and are not intended to serve as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this platform. Reliance on any information provided by this platform or its employees, agents, partners, or affiliates is solely at your own risk. We do not endorse or recommend any specific tests, physicians, products, procedures, opinions, or other information that may be mentioned on this platform. This platform is not responsible or liable for any advice, course of treatment, diagnosis, or any other information, services, or products that you obtain through this platform. Always consult with your physician or other qualified healthcare provider before starting any new treatment or discontinuing an existing treatment. If you think you may have a medical emergency, call your doctor or emergency services immediately. Never disregard professional medical advice or delay in seeking it because of something you have read on this website/application."
-
+    
             st.write("### Single Base Model Predictions:")
             st.write("Interpretation:", interpretation_single)
-
+    
             # Check if the image is labeled as "Cancer" in the filename
             if is_cancer_image:
-                st.success("Image is labeled as 'Cancer'.")
+                if is_cancerous_ensemble:
+                    st.success("Ensemble model predicts accurately that the image contains cancer.")
+                else:
+                    st.warning("Ensemble model predicts inaccurately that the image does not contain cancer.")
                 st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
                 st.warning(warning)
             else:
-                st.warning("Image is not labeled as 'Cancer'.")
+                if is_cancerous_ensemble:
+                    st.warning("Ensemble model predicts inaccurately that the image contains cancer.")
+                else:
+                    st.success("Ensemble model predicts accurately that the image does not contain cancer.")
                 st.write("Visit our github page: https://github.com/Anarchist1984/leukemia-ml")
                 st.warning(warning)
-
+    
         else:
             st.warning("No image selected.")
 
