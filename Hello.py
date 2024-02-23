@@ -76,7 +76,7 @@ def run():
                 # Interpret predictions
                 is_cancerous = predictions[0][1] > 0.5
                 confidence = predictions[0][1] if is_cancerous else predictions[0][0]
-                interpretation_list.append(f"The base model predicts that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells with a confidence of {confidence:.2f}.")
+                interpretation_list.append(f"The base model (CNN model) predicts that the image {'contains' if is_cancerous else 'does not contain'} cancerous cells with a confidence of {confidence:.2f}.")
 
             # Display results for each model
             for i, interpretation in enumerate(interpretation_list):
