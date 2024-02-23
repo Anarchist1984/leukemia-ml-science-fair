@@ -27,10 +27,10 @@ def ensemble_predict(models, weights, image_array):
     return tf.reduce_sum(predictions, axis=0)
 
 def run():
-    st.title("Leukemia Detection using Ensemble CNN")
-    st.write("""
+    st.title("Leukemia Detection using an Ensemble CNN with Comparison")
+    st.write(""" 
     This application uses an ensemble of Convolutional Neural Networks (CNNs) to detect leukemia from images of blood cell samples.
-    Choose an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells.
+    Choose an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells and compare it against a regular CNN model.
     """)
 
     # Load multiple models with different weights
