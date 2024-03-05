@@ -22,7 +22,7 @@ This is a Streamlit web application that uses an ensemble of Convolutional Neura
    streamlit run app.py
    ```
 
-4. The web application will open in your default web browser. You can then upload an image containing blood cell samples to get predictions from the ensemble model.
+4. The web application will open in your default web browser. You can then select an image containing blood cell samples to get predictions from the ensemble model.
 
 ## Requirements
 
