@@ -7,7 +7,7 @@ This is a Streamlit web application that uses an ensemble of Convolutional Neura
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/leukemia-detection.git
+   git clone https://github.com/Anarchist1984/leukemia-ml.git
    ```
 
 2. Install the required dependencies:
