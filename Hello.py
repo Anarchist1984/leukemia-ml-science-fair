@@ -101,7 +101,7 @@ def run():
             confidence_ensemble = ensemble_results[0][1] if is_cancerous_ensemble else ensemble_results[0][0]
             interpretation_list.append(f"The ensemble model predicts that the image {'contains' if is_cancerous_ensemble else 'does not contain'} cancerous cells.")
             st.write("### Ensemble Model Congregated Results:")
-            st.write(f"Predictions:", interpretation_list[-1])
+            st.write("Predictions:", interpretation_list[-1])
             if is_cancer_image:
                 if is_cancerous_ensemble:
                     st.success("Ensemble model predicts accurately that the image contains cancer.")
