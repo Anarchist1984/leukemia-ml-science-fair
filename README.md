@@ -1,6 +1,7 @@
 # Leukemia Detection using Ensemble CNN
 
 This is a Streamlit web application that uses an ensemble of Convolutional Neural Networks (CNNs) to detect leukemia from images of blood cell samples. The application allows users to upload an image containing blood cell samples, and the ensemble model will predict whether the image contains cancerous cells.
+[Streamlit](https://leukemia-ml.streamlit.app/)
 
 ## Usage
 
